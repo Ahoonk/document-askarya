@@ -26,8 +26,8 @@ class UserFactory extends Factory
     {
         return [
             'company_id' => null,
-            'name' => 'admin',
-            'email' => 'admin@example.com',
+            'name' => 'User '.Str::upper(Str::random(8)),
+            'email' => 'user_'.Str::lower(Str::random(16)).'@example.test',
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'role' => 'admin',
@@ -42,6 +42,19 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
+        ]);
+    }
+
+    /**
+     * Create the fixed admin user used by seeding.
+     */
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'name' => 'admin',
+            'email' => 'admin@example.com',
+            'password' => Hash::make('password'),
+            'role' => 'admin',
         ]);
     }
 }

@@ -35,10 +35,10 @@ class DatabaseSeeder extends Seeder
         );
 
         User::firstOrCreate(
-            ['email' => 'admin2@askarya.test'],
+            ['email' => 'admin@example.com'],
             [
                 'company_id' => $company->id,
-                'name' => 'Admin',
+                'name' => 'admin',
                 'password' => Hash::make('password'),
                 'role' => 'admin',
             ]
