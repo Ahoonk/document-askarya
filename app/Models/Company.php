@@ -1,0 +1,45 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class Company extends Model
+{
+    protected $fillable = [
+        'name',
+        'address',
+        'logo',
+    ];
+
+    public function users(): HasMany
+    {
+        return $this->hasMany(User::class);
+    }
+
+    public function customers(): HasMany
+    {
+        return $this->hasMany(Customer::class);
+    }
+
+    public function mitras(): HasMany
+    {
+        return $this->hasMany(Mitra::class);
+    }
+
+    public function penawarans(): HasMany
+    {
+        return $this->hasMany(Penawaran::class);
+    }
+
+    public function documentSeries(): HasMany
+    {
+        return $this->hasMany(DocumentSeries::class);
+    }
+
+    public function documentTemplates(): HasMany
+    {
+        return $this->hasMany(DocumentTemplate::class);
+    }
+}
