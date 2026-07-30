@@ -26,17 +26,14 @@ function createInvoice(penawaran) {
 }
 
 function nextInvoice(penawaran) {
-    const invoiceDate = prompt('Masukkan tanggal invoice (YYYY-MM-DD)', new Date().toISOString().slice(0, 10));
-
-    if (!invoiceDate) {
-        return;
-    }
-
     router.post(route('purchasing-order.next-invoice', penawaran.id), {
-        invoice_date: invoiceDate,
     }, {
         preserveScroll: true,
     });
+}
+
+function openInvoice(invoiceId) {
+    router.visit(route('invoice.show', invoiceId));
 }
 
 function cancelApproved(penawaran) {
@@ -117,11 +114,29 @@ function cancelApproved(penawaran) {
                                     <Link :href="route('invoice.index')" class="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700">
                                         Invoice
                                     </Link>
-                                    <button v-if="penawaran.jenis_kontrak === 'kontrak'" type="button" @click="nextInvoice(penawaran)" class="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white">
+                                    <button
+                                        v-if="!penawaran.latest_invoice"
+                                        type="button"
+                                        @click="createInvoice(penawaran)"
+                                        class="rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white"
+                                    >
+                                        Cetak Invoice
+                                    </button>
+                                    <button
+                                        v-else-if="penawaran.jenis_kontrak === 'kontrak'"
+                                        type="button"
+                                        @click="nextInvoice(penawaran)"
+                                        class="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white"
+                                    >
                                         Next Invoice
                                     </button>
-                                    <button v-else type="button" @click="createInvoice(penawaran)" class="rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white">
-                                        Cetak Invoice
+                                    <button
+                                        v-else
+                                        type="button"
+                                        @click="openInvoice(penawaran.latest_invoice.id)"
+                                        class="rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white"
+                                    >
+                                        Buka Invoice
                                     </button>
                                     <button type="button" @click="cancelApproved(penawaran)" class="rounded-full bg-rose-600 px-4 py-2 text-sm font-semibold text-white">
                                         Batalkan

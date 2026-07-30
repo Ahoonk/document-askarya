@@ -13,10 +13,6 @@ const props = defineProps({
     },
 });
 
-const printDateForm = useForm({
-    tanggal: props.invoice.tanggal ?? new Date().toISOString().slice(0, 10),
-});
-
 const paymentForm = useForm({
     payment_date: props.invoice.payment_date ?? new Date().toISOString().slice(0, 10),
 });
@@ -27,12 +23,6 @@ function deleteInvoice() {
     }
 
     router.delete(route('invoice.destroy', props.invoice.id), {
-        preserveScroll: true,
-    });
-}
-
-function updatePrintDate() {
-    printDateForm.post(route('invoice.update-print-date', props.invoice.id), {
         preserveScroll: true,
     });
 }
@@ -148,18 +138,6 @@ function backToList() {
                         <div class="rounded-2xl bg-[#fff2d9] p-4">
                             <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Snapshot</p>
                             <p class="mt-2 text-sm text-slate-700">Invoice, surat jalan, dan dokumen turunan sudah dipersiapkan lewat snapshot data.</p>
-                        </div>
-
-                        <div class="rounded-2xl bg-[#fff2d9] p-4">
-                            <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Update Tanggal</p>
-                            <div class="mt-3">
-                                <InputLabel value="Tanggal" />
-                                <TextInput v-model="printDateForm.tanggal" type="date" class="mt-2 block w-full" />
-                                <p v-if="printDateForm.errors.tanggal" class="mt-2 text-sm text-rose-600">{{ printDateForm.errors.tanggal }}</p>
-                            </div>
-                            <PrimaryButton class="mt-4" :disabled="printDateForm.processing" @click="updatePrintDate">
-                                Simpan Tanggal
-                            </PrimaryButton>
                         </div>
 
                         <div v-if="$page.props.auth.user?.role === 'superadmin'" class="rounded-2xl bg-emerald-50 p-4">

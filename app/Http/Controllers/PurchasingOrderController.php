@@ -127,6 +127,13 @@ class PurchasingOrderController extends Controller
         return $beritaAcara;
     }
 
+    private function resolveInvoiceDateFromPo(Penawaran $penawaran): string
+    {
+        $penawaran->loadMissing('purchasingOrder');
+
+        return $penawaran->purchasingOrder?->tanggal_po?->format('Y-m-d') ?? now()->toDateString();
+    }
+
     public function index(): Response
     {
         $companyId = $this->getCompanyIdOrRedirect();
@@ -248,7 +255,7 @@ class PurchasingOrderController extends Controller
 
         return DB::transaction(function () use ($penawaran, $companyId) {
             $sequence = 1;
-            $invoiceDate = now()->toDateString();
+            $invoiceDate = $this->resolveInvoiceDateFromPo($penawaran);
             $mitra = $penawaran->mitra;
             $numberService = app(DocumentNumberService::class);
 
@@ -316,7 +323,7 @@ class PurchasingOrderController extends Controller
 
             app(DocumentSnapshotService::class)->refreshPenawaranAndRelatedDocuments($penawaran);
 
-            return redirect()->route('invoice.show', $invoice)->with('success', 'Invoice berhasil dibuat dari PO.');
+            return redirect()->route('invoice.index')->with('success', 'Invoice berhasil dibuat dari PO.');
         });
     }
 
@@ -328,16 +335,16 @@ class PurchasingOrderController extends Controller
         abort_if($penawaran->jenis_kontrak !== 'kontrak', 403);
         abort_if(! $penawaran->purchasingOrder, 403);
 
-        $validated = $request->validate([
-            'invoice_date' => ['required', 'date'],
-        ]);
+        $invoiceDate = $this->resolveInvoiceDateFromPo($penawaran);
 
-        return DB::transaction(function () use ($penawaran, $companyId, $validated) {
-            $latestSequence = (int) $penawaran->invoices()->max('sequence');
-            abort_if($latestSequence < 1, 403);
+        return DB::transaction(function () use ($penawaran, $companyId, $invoiceDate) {
+            $latestSequence = max(
+                (int) $penawaran->invoices()->max('sequence'),
+                (int) $penawaran->invoices()->count(),
+                (int) $penawaran->invoice_sequence
+            );
 
-            $currentSequence = max((int) $penawaran->invoice_sequence, $latestSequence, 1);
-            $nextSequence = $currentSequence + 1;
+            $nextSequence = $latestSequence > 0 ? $latestSequence + 1 : 1;
             $mitra = $penawaran->mitra;
             $numberService = app(DocumentNumberService::class);
 
@@ -350,7 +357,7 @@ class PurchasingOrderController extends Controller
 
                 $invoiceNumber = $mitra->nomor_invoice;
             } else {
-                $invoiceNumber = $numberService->nextAlderaInvoice($companyId, $validated['invoice_date']);
+                $invoiceNumber = $numberService->nextAlderaInvoice($companyId, $invoiceDate);
             }
 
             $invoice = Invoice::create([
@@ -358,7 +365,7 @@ class PurchasingOrderController extends Controller
                 'penawaran_id' => $penawaran->id,
                 'purchasing_order_id' => $penawaran->purchasingOrder->id,
                 'nomor' => $invoiceNumber,
-                'tanggal' => $validated['invoice_date'],
+                'tanggal' => $invoiceDate,
                 'sequence' => $nextSequence,
                 'total' => $penawaran->total,
                 'created_by' => auth()->id(),
@@ -378,7 +385,7 @@ class PurchasingOrderController extends Controller
                 $suratJalanNomor = $mitra->nomor_surat_jalan;
             } else {
                 $suratJalanNomor = $numberService->alderaNumberFromInvoice($invoiceNumber, 'SJ')
-                    ?? $numberService->next($companyId, 'surat_jalan', $validated['invoice_date']);
+                    ?? $numberService->next($companyId, 'surat_jalan', $invoiceDate);
             }
 
             $suratJalan = SuratJalan::firstOrCreate(
@@ -386,7 +393,7 @@ class PurchasingOrderController extends Controller
                 [
                     'company_id' => $companyId,
                     'nomor' => $suratJalanNomor,
-                    'tanggal' => $validated['invoice_date'],
+                    'tanggal' => $invoiceDate,
                     'created_by' => auth()->id(),
                 ]
             );
@@ -395,17 +402,17 @@ class PurchasingOrderController extends Controller
                 'snapshot_data' => app(DocumentSnapshotService::class)->forSuratJalan($suratJalan),
             ]);
 
-            $this->createOrRefreshBeritaAcara($invoice, $companyId, $validated['invoice_date']);
+            $this->createOrRefreshBeritaAcara($invoice, $companyId, $invoiceDate);
 
             $penawaran->update([
                 'invoice_sequence' => $nextSequence,
-                'invoice_date' => $validated['invoice_date'],
+                'invoice_date' => $invoiceDate,
                 'invoice_number' => $invoiceNumber,
             ]);
 
             app(DocumentSnapshotService::class)->refreshPenawaranAndRelatedDocuments($penawaran);
 
-            return redirect()->route('invoice.show', $invoice)->with('success', 'Invoice berikutnya berhasil dibuat.');
+            return redirect()->route('invoice.index')->with('success', 'Invoice berikutnya berhasil dibuat.');
         });
     }
 
