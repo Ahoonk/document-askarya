@@ -116,7 +116,7 @@ class BeritaAcaraPdfService
 
         $pdf->SetFont('Arial', '', 10);
         $pdf->SetXY($left, $cursorY);
-        $pdf->MultiCell($textWidth, 5.1, $this->toPdfText(implode("\n", $paragraphLines)), 0, 'L');
+        $pdf->MultiCell($textWidth, 5.1, $this->toPdfText(implode("\n", $paragraphLines)), 0, 'J');
         $cursorY = $pdf->GetY() + 4;
 
         $pdf->SetFont('Arial', '', 10);
