@@ -174,12 +174,21 @@ class PurchasingOrderController extends Controller
     {
         $companyId = $this->getCompanyIdOrRedirect();
 
-        $validated = $request->validate([
-            'penawaran_id' => ['required', 'exists:penawarans,id'],
-            'nomor_po' => ['required', 'string', 'max:100'],
-            'tanggal_po' => ['required', 'date'],
-            'dokumen' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
-        ]);
+        $validated = $request->validate(
+            [
+                'penawaran_id' => ['required', 'exists:penawarans,id'],
+                'nomor_po' => ['required', 'string', 'max:100'],
+                'tanggal_po' => ['required', 'date'],
+                'dokumen' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
+            ],
+            [
+                'dokumen.required' => 'File dokumen wajib diunggah.',
+                'dokumen.file' => 'Dokumen harus berupa file yang valid.',
+                'dokumen.mimes' => 'Format dokumen harus PDF, JPG, JPEG, atau PNG.',
+                'dokumen.max' => 'Ukuran dokumen maksimal 5 MB.',
+                'dokumen.uploaded' => 'Upload gagal di server. Cek upload_max_filesize, post_max_size, dan permission folder storage di VPS.',
+            ]
+        );
 
         $penawaran = $this->companyPenawarans($companyId)
             ->where('status', 'approved')
