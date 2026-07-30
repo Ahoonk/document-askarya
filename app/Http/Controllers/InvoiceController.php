@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Concerns\ResolvesCompanyId;
 use App\Models\Invoice;
 use App\Models\Penawaran;
+use App\Models\BeritaAcara;
+use App\Services\DocumentNumberService;
 use App\Services\DocumentSnapshotService;
 use App\Services\InvoicePdfService;
 use Illuminate\Http\RedirectResponse;
@@ -135,44 +137,64 @@ class InvoiceController extends Controller
     public function updatePrintDate(Request $request, Invoice $invoice): RedirectResponse
     {
         $companyId = $this->getCompanyIdOrRedirect();
-        $invoice->load('penawaran.mitra', 'suratJalan');
+        $invoice->load('penawaran.company', 'penawaran.mitra', 'penawaran.items', 'purchasingOrder', 'suratJalan', 'beritaAcara');
         abort_if(! $invoice->penawaran || $invoice->penawaran->company_id !== $companyId, 403);
 
         $validated = $request->validate([
             'tanggal' => ['required', 'date'],
         ]);
 
-        $currentYearMonth = optional($invoice->tanggal)?->format('Y-m');
-        $nextYearMonth = \Illuminate\Support\Carbon::parse($validated['tanggal'])->format('Y-m');
-        $shouldRenumber = $this->isAlderaInvoiceFormat($invoice->nomor)
-            && (! $this->isNewAlderaInvoiceFormat($invoice->nomor) || $currentYearMonth !== $nextYearMonth);
+        return DB::transaction(function () use ($invoice, $companyId, $validated) {
+            $currentYearMonth = optional($invoice->tanggal)?->format('Y-m');
+            $nextYearMonth = \Illuminate\Support\Carbon::parse($validated['tanggal'])->format('Y-m');
+            $shouldRenumber = $this->isAlderaInvoiceFormat($invoice->nomor)
+                && (! $this->isNewAlderaInvoiceFormat($invoice->nomor) || $currentYearMonth !== $nextYearMonth);
 
-        $invoiceNumber = $shouldRenumber
-            ? app(\App\Services\DocumentNumberService::class)->nextAlderaInvoice($companyId, $validated['tanggal'], $invoice->id)
-            : $invoice->nomor;
+            $numberService = app(DocumentNumberService::class);
+            $invoiceNumber = $shouldRenumber
+                ? $numberService->nextAlderaInvoice($companyId, $validated['tanggal'], $invoice->id)
+                : $invoice->nomor;
 
-        $invoice->update([
-            'tanggal' => $validated['tanggal'],
-            'nomor' => $invoiceNumber,
-        ]);
-
-        $invoice->update([
-            'snapshot_data' => app(DocumentSnapshotService::class)->forInvoice($invoice),
-        ]);
-
-        if ($invoice->suratJalan) {
-            $suratJalanNumber = $shouldRenumber
-                ? app(\App\Services\DocumentNumberService::class)->alderaNumberFromInvoice($invoiceNumber, 'SJ') ?? $invoice->suratJalan->nomor
-                : $invoice->suratJalan->nomor;
-
-            $invoice->suratJalan->update([
+            $invoice->update([
                 'tanggal' => $validated['tanggal'],
-                'nomor' => $suratJalanNumber,
-                'snapshot_data' => app(DocumentSnapshotService::class)->forSuratJalan($invoice->suratJalan->refresh()),
+                'nomor' => $invoiceNumber,
             ]);
-        }
 
-        return back()->with('success', 'Tanggal invoice berhasil diperbarui.');
+            $invoice->penawaran?->update([
+                'invoice_date' => $validated['tanggal'],
+                'invoice_number' => $invoiceNumber,
+                'invoice_sequence' => $invoice->sequence,
+            ]);
+
+            if ($invoice->suratJalan) {
+                $suratJalanNumber = $shouldRenumber
+                    ? $numberService->alderaNumberFromInvoice($invoiceNumber, 'SJ') ?? $invoice->suratJalan->nomor
+                    : $invoice->suratJalan->nomor;
+
+                $invoice->suratJalan->update([
+                    'tanggal' => $validated['tanggal'],
+                    'nomor' => $suratJalanNumber,
+                ]);
+            }
+
+            if ($invoice->beritaAcara) {
+                $beritaAcaraNumber = $shouldRenumber
+                    ? $numberService->alderaNumberFromInvoice($invoiceNumber, 'BA') ?? $invoice->beritaAcara->nomor
+                    : $invoice->beritaAcara->nomor;
+
+                $invoice->beritaAcara->update([
+                    'tanggal' => $validated['tanggal'],
+                    'nomor' => $beritaAcaraNumber,
+                    'kota_tanggal_manual' => $validated['tanggal'],
+                ]);
+            }
+
+            app(DocumentSnapshotService::class)->refreshPenawaranAndRelatedDocuments(
+                $invoice->penawaran->refresh()->load(['company', 'mitra', 'items', 'user', 'invoices.purchasingOrder', 'invoices.suratJalan', 'invoices.beritaAcara'])
+            );
+
+            return back()->with('success', 'Tanggal invoice berhasil diperbarui dan dokumen turunannya ikut disinkronkan.');
+        });
     }
 
     public function verifyPayment(Request $request, Invoice $invoice): RedirectResponse

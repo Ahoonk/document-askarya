@@ -13,6 +13,10 @@ const props = defineProps({
     },
 });
 
+const printDateForm = useForm({
+    tanggal: props.invoice.tanggal ?? new Date().toISOString().slice(0, 10),
+});
+
 const paymentForm = useForm({
     payment_date: props.invoice.payment_date ?? new Date().toISOString().slice(0, 10),
 });
@@ -29,6 +33,12 @@ function deleteInvoice() {
 
 function verifyPayment() {
     paymentForm.post(route('invoice.verify-payment', props.invoice.id), {
+        preserveScroll: true,
+    });
+}
+
+function updatePrintDate() {
+    printDateForm.post(route('invoice.update-print-date', props.invoice.id), {
         preserveScroll: true,
     });
 }
@@ -112,6 +122,18 @@ function backToList() {
                     </article>
 
                     <article class="space-y-4 rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
+                        <div class="rounded-2xl bg-[#fff2d9] p-4">
+                            <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Edit Tanggal</p>
+                            <div class="mt-3">
+                                <InputLabel value="Tanggal Invoice" />
+                                <TextInput v-model="printDateForm.tanggal" type="date" class="mt-2 block w-full" />
+                                <p v-if="printDateForm.errors.tanggal" class="mt-2 text-sm text-rose-600">{{ printDateForm.errors.tanggal }}</p>
+                            </div>
+                            <PrimaryButton class="mt-4" :disabled="printDateForm.processing" @click="updatePrintDate">
+                                Simpan Perubahan
+                            </PrimaryButton>
+                        </div>
+
                         <div class="rounded-2xl bg-[#fff2d9] p-4">
                             <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Tanggal Pembayaran</p>
                             <p class="mt-2 text-sm text-slate-700">{{ invoice.payment_date ? formatDate(invoice.payment_date) : '-' }}</p>
