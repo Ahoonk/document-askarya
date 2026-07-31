@@ -71,7 +71,7 @@ const quickStats = computed(() => [
                             <span class="inline-flex rounded-full bg-[#ff2d2d] px-4 py-1 text-xs font-semibold uppercase tracking-[0.28em] text-white shadow-[0_8px_20px_rgba(255,45,45,0.32)]">
                                 Dokumen Askarya
                             </span>
-                            <h1 class="max-w-3xl text-4xl font-bold leading-tight text-blue-950 sm:text-5xl">
+                            <h1 class="max-w-3xl font-['Space_Grotesk',sans-serif] text-4xl font-bold leading-tight tracking-[-0.05em] text-blue-950 sm:text-5xl">
                                 PT ALDERA SADDATECH KARYA
                             </h1>
                             <p class="max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
