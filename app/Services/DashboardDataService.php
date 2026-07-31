@@ -15,6 +15,9 @@ class DashboardDataService
         $invoiceQuery = Invoice::whereHas('penawaran', fn ($query) => $query->where('company_id', $companyId));
         $notaTokoQuery = NotaToko::where('company_id', $companyId);
         $fakturQuery = FakturPajak::whereHas('invoice.penawaran', fn ($query) => $query->where('company_id', $companyId));
+        $unpaidInvoices = (clone $invoiceQuery)
+            ->where('payment_status', 'unpaid')
+            ->with(['penawaran:id,company_id,tax_percent,tax_amount']);
 
         return [
             'dashboardStatus' => [
@@ -42,6 +45,7 @@ class DashboardDataService
                 'total_semua' => (clone $invoiceQuery)->sum('total'),
                 'total_sudah_dibayar' => (clone $invoiceQuery)->where('payment_status', 'paid')->sum('total'),
                 'total_belum_dibayar' => (clone $invoiceQuery)->where('payment_status', 'unpaid')->sum('total'),
+                'pajak_belum_dibayar' => $unpaidInvoices->get()->sum(fn (Invoice $invoice) => (float) ($invoice->penawaran?->tax_amount ?? 0)),
                 'jumlah_semua' => (clone $invoiceQuery)->count(),
                 'jumlah_sudah_dibayar' => (clone $invoiceQuery)->where('payment_status', 'paid')->count(),
                 'jumlah_belum_dibayar' => (clone $invoiceQuery)->where('payment_status', 'unpaid')->count(),

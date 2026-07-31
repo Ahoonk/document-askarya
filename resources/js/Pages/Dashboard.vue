@@ -2,9 +2,14 @@
 import { computed } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
+import { formatCurrency } from '@/utils/format';
 
 const props = defineProps({
     modules: {
+        type: Object,
+        default: () => ({}),
+    },
+    dashboardFinancial: {
         type: Object,
         default: () => ({}),
     },
@@ -26,10 +31,26 @@ const moduleCards = computed(() => {
 });
 
 const quickStats = computed(() => [
-    { label: 'Modul inti', value: moduleCards.value.length.toString(), note: 'alur dokumen utama' },
-    { label: 'Core stack', value: 'Laravel + Vue', note: 'backend + frontend' },
-    { label: 'Runtime', value: props.phpVersion || '-', note: 'PHP aktif' },
-    { label: 'Framework', value: props.laravelVersion || '-', note: 'Laravel aktif' },
+    {
+        label: 'Modul inti',
+        value: formatCurrency(props.dashboardFinancial.total_semua ?? 0),
+        note: 'jumlah nilai invoice yang sudah terbuat',
+    },
+    {
+        label: 'Core stack',
+        value: formatCurrency(props.dashboardFinancial.total_belum_dibayar ?? 0),
+        note: 'jumlah nilai invoice belum dibayar',
+    },
+    {
+        label: 'Runtime',
+        value: formatCurrency(props.dashboardFinancial.pajak_belum_dibayar ?? 0),
+        note: 'jumlah pajak dari invoice unpaid',
+    },
+    {
+        label: 'Framework',
+        value: Number(props.dashboardFinancial.jumlah_semua ?? 0).toLocaleString('id-ID'),
+        note: 'jumlah transaksi invoice yang sudah dicetak',
+    },
 ]);
 </script>
 

@@ -11,6 +11,7 @@ use App\Http\Controllers\NotaTokoController;
 use App\Http\Controllers\BeritaAcaraController;
 use App\Http\Controllers\FakturPajakController;
 use App\Http\Controllers\ProfileController;
+use App\Services\DashboardDataService;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -124,10 +125,14 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () use ($documentModules) {
+    $companyId = auth()->user()?->company_id;
+    $dashboardData = $companyId ? app(DashboardDataService::class)->forCompany((int) $companyId) : [];
+
     return Inertia::render('Dashboard', [
         'modules' => $documentModules,
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
+        'dashboardFinancial' => $dashboardData['dashboardFinancial'] ?? [],
     ]);
 })->middleware(['auth'])->name('dashboard');
 
