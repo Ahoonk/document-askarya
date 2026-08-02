@@ -92,7 +92,7 @@ class NotaTokoPdfService
         $this->labelLine($pdf, 'Tanggal', $tanggal, $rightX, $topY + 5, 80);
 
         $tableX = 8;
-        $tableY = 46 + $contentShiftY;
+        $tableY = 48 + $contentShiftY;
         $columns = [
             ['label' => 'No', 'width' => 10],
             ['label' => 'Item', 'width' => 92],
@@ -103,7 +103,7 @@ class NotaTokoPdfService
         $tableWidth = array_sum(array_column($columns, 'width'));
         $displayRows = array_slice($items, 0, 6);
         $remainingRows = max(count($items) - count($displayRows), 0);
-        $rowHeight = 8.8;
+        $rowHeight = 9.4;
 
         if ($remainingRows > 0) {
             $displayRows[] = [
@@ -136,7 +136,7 @@ class NotaTokoPdfService
         $tableBottomY = $tableY + 10 + $bodyHeight;
         $terbilangY = $tableBottomY + 2.5;
         $terbilangValueY = $terbilangY + 4.0;
-        $summaryY = $tableBottomY + 2.0;
+        $summaryY = $tableBottomY + 1.2;
         $summaryWidth = 80;
 
         $pdf->SetFont('Arial', 'I', 8.8);
@@ -146,8 +146,8 @@ class NotaTokoPdfService
         $pdf->MultiCell(105, 4.0, $this->toPdfText($this->amountToWords($total) . ' Rupiah'), 0, 'L');
 
         $this->summaryRow($pdf, $summaryX, $summaryY, $summaryWidth, 'Subtotal', $this->formatMoney($subtotal));
-        $this->summaryRow($pdf, $summaryX, $summaryY + 6.2, $summaryWidth, 'Tax (' . $this->formatPercent($taxPercent) . '%)', $this->formatMoney($taxAmount));
-        $this->summaryRow($pdf, $summaryX, $summaryY + 12.4, $summaryWidth, 'Total', $this->formatMoney($total), true);
+        $this->summaryRow($pdf, $summaryX, $summaryY + 4.9, $summaryWidth, 'Diskon', $this->formatMoney($taxAmount));
+        $this->summaryRow($pdf, $summaryX, $summaryY + 9.8, $summaryWidth, 'Total', $this->formatMoney($total), true);
 
         if ($notes !== '') {
             $pdf->SetFont('Arial', 'I', 8.4);
@@ -231,27 +231,34 @@ class NotaTokoPdfService
     {
         $pdf->SetFont('Arial', '', 8.5);
         $cursor = $x;
+        $textY = $y + 1.3;
 
         foreach ($columns as $index => $column) {
             $pdf->SetXY($cursor, $y);
             $pdf->Cell($column['width'], $rowHeight, '', 0, 0, 'L');
 
             $text = (string) ($values[$index] ?? '');
-            $pdf->SetXY($cursor + 1, $y + 0.7);
             $align = in_array($index, [0, 2, 3, 4], true) ? 'C' : 'L';
-            $pdf->Cell($column['width'] - 2, 3.5, $this->toPdfText($text), 0, 0, $align);
+
+            if ($index === 1) {
+                $pdf->SetXY($cursor + 1.2, $textY);
+                $pdf->Cell($column['width'] - 2.4, 3.5, $this->toPdfText($text), 0, 0, 'L');
+            } else {
+                $pdf->SetXY($cursor, $textY);
+                $pdf->Cell($column['width'], 3.5, $this->toPdfText($text), 0, 0, $align);
+            }
             $cursor += $column['width'];
         }
     }
 
     private function summaryRow(Fpdi $pdf, float $x, float $y, float $width, string $label, string $value, bool $bold = false): void
     {
-        $pdf->SetFont('Arial', '', 8.5);
+        $pdf->SetFont('Arial', '', 8.2);
         $pdf->SetXY($x, $y);
-        $pdf->Cell($width * 0.58, 6.0, $this->toPdfText($label), 0, 0, 'L');
-        $pdf->SetFont('Arial', $bold ? 'B' : '', 8.5);
-        $pdf->Cell($width * 0.42, 6.0, $this->toPdfText($value), 0, 0, 'R');
-        $this->drawDashedLine($pdf, $x, $y + 6.0, $x + $width);
+        $pdf->Cell($width * 0.58, 4.6, $this->toPdfText($label), 0, 0, 'L');
+        $pdf->SetFont('Arial', $bold ? 'B' : '', 8.2);
+        $pdf->Cell($width * 0.42, 4.6, $this->toPdfText($value), 0, 0, 'R');
+        $this->drawDashedLine($pdf, $x, $y + 4.2, $x + $width);
     }
 
     private function drawDashedLine(Fpdi $pdf, float $x1, float $y1, float $x2, float $dashLength = 1.6, float $gapLength = 0.9): void

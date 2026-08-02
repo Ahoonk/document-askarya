@@ -32,24 +32,24 @@ const moduleCards = computed(() => {
 
 const quickStats = computed(() => [
     {
-        label: 'Modul inti',
+        label: 'Total Invoice',
         value: formatCurrency(props.dashboardFinancial.total_semua ?? 0),
-        note: 'jumlah nilai invoice yang sudah terbuat',
+        note: 'Periode 2026',
     },
     {
-        label: 'Core stack',
+        label: 'Unpaid Invoice',
         value: formatCurrency(props.dashboardFinancial.total_belum_dibayar ?? 0),
-        note: 'jumlah nilai invoice belum dibayar',
+        note: 'Periode 2026',
     },
     {
-        label: 'Runtime',
+        label: 'Unpaid Tax',
         value: formatCurrency(props.dashboardFinancial.pajak_belum_dibayar ?? 0),
-        note: 'jumlah pajak dari invoice unpaid',
+        note: 'Periode 2026',
     },
     {
-        label: 'Framework',
+        label: 'Total Transaction',
         value: Number(props.dashboardFinancial.jumlah_semua ?? 0).toLocaleString('id-ID'),
-        note: 'jumlah transaksi invoice yang sudah dicetak',
+        note: 'Periode 2026',
     },
 ]);
 </script>
