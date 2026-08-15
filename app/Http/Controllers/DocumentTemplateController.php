@@ -43,9 +43,25 @@ class DocumentTemplateController extends Controller
             'created_at' => optional($template->created_at)->toISOString(),
             'updated_at' => optional($template->updated_at)->toISOString(),
             'storage_url' => $template->file_path && ! str_contains($template->file_path, 'resources/views/')
-                ? route('document-templates.preview', ['path' => $template->file_path])
+                ? route('document-templates.preview', [
+                    'path' => $template->file_path,
+                    'v' => $this->templateVersion($template->file_path),
+                ])
                 : null,
         ];
+    }
+
+    private function templateVersion(?string $filePath): ?int
+    {
+        if (! $filePath) {
+            return null;
+        }
+
+        $relativePath = ltrim($filePath, '/\\');
+
+        return Storage::disk('public')->exists($relativePath)
+            ? Storage::disk('public')->lastModified($relativePath)
+            : null;
     }
 
     private function persistFilePath(Request $request, ?string $existingPath = null): ?string

@@ -20,15 +20,20 @@ const paymentStyles = {
     paid: 'bg-emerald-100 text-emerald-800',
 };
 
-const previewHref = computed(() => {
-    if (!props.notaToko.preview_url) {
-        return '';
+function openPdf(url, download = false) {
+    if (!url) {
+        return;
     }
 
-    const separator = props.notaToko.preview_url.includes('?') ? '&' : '?';
+    const parsed = new URL(url, window.location.origin);
+    parsed.searchParams.set('cb', String(Date.now()));
 
-    return `${props.notaToko.preview_url}${separator}cb=${Date.now()}`;
-});
+    if (download) {
+        parsed.searchParams.set('download', '1');
+    }
+
+    window.open(parsed.toString(), '_blank', 'noreferrer');
+}
 
 function destroy() {
     if (!confirm(`Hapus nota toko ${props.notaToko.nomor}?`)) {
@@ -53,12 +58,12 @@ function destroy() {
                     </div>
 
                     <div class="flex flex-wrap gap-2">
-                        <a v-if="notaToko.preview_url" :href="previewHref" target="_blank" rel="noreferrer" class="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700">
+                        <button v-if="notaToko.preview_url" type="button" @click="openPdf(notaToko.preview_url)" class="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700">
                             Preview PDF
-                        </a>
-                        <a v-if="notaToko.preview_url" :href="`${previewHref}&download=1`" target="_blank" rel="noreferrer" class="rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white">
+                        </button>
+                        <button v-if="notaToko.preview_url" type="button" @click="openPdf(notaToko.preview_url, true)" class="rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white">
                             Unduh PDF
-                        </a>
+                        </button>
                         <Link :href="route('nota-toko.index')" class="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700">
                             Kembali
                         </Link>

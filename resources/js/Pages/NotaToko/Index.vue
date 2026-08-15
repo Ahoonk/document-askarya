@@ -1,5 +1,4 @@
 <script setup>
-import { computed } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { formatCurrency, formatDate } from '@/utils/format';
@@ -20,19 +19,20 @@ const paymentStyles = {
     paid: 'bg-emerald-100 text-emerald-800',
 };
 
-const previewHrefs = computed(() => {
-    return props.notaTokos.reduce((acc, notaToko) => {
-        if (!notaToko.preview_url) {
-            acc[notaToko.id] = '';
-            return acc;
-        }
+function openPdf(url, download = false) {
+    if (!url) {
+        return;
+    }
 
-        const separator = notaToko.preview_url.includes('?') ? '&' : '?';
-        acc[notaToko.id] = `${notaToko.preview_url}${separator}cb=${Date.now()}`;
+    const parsed = new URL(url, window.location.origin);
+    parsed.searchParams.set('cb', String(Date.now()));
 
-        return acc;
-    }, {});
-});
+    if (download) {
+        parsed.searchParams.set('download', '1');
+    }
+
+    window.open(parsed.toString(), '_blank', 'noreferrer');
+}
 
 function destroy(notaToko) {
     if (!confirm(`Hapus nota toko ${notaToko.nomor}?`)) {
@@ -118,9 +118,9 @@ function destroy(notaToko) {
                                     <td class="px-6 py-4 font-semibold text-slate-950">{{ formatCurrency(notaToko.total) }}</td>
                                     <td class="px-6 py-4">
                                         <div class="flex flex-wrap gap-2">
-                                            <a v-if="notaToko.preview_url" :href="previewHrefs[notaToko.id]" target="_blank" rel="noreferrer" class="rounded-full border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700">
+                                            <button v-if="notaToko.preview_url" type="button" @click="openPdf(notaToko.preview_url)" class="rounded-full border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700">
                                                 Preview
-                                            </a>
+                                            </button>
                                             <Link :href="route('nota-toko.show', notaToko.id)" class="rounded-full border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700">
                                                 Detail
                                             </Link>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Concerns\ResolvesCompanyId;
 use App\Models\Customer;
 use App\Models\NotaToko;
 use App\Models\NotaTokoItem;
+use App\Services\DocumentTemplateResolver;
 use App\Services\DocumentNumberService;
 use App\Services\DocumentSnapshotService;
 use App\Services\NotaTokoPdfService;
@@ -13,6 +14,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Validation\Rule;
@@ -62,6 +64,8 @@ class NotaTokoController extends Controller
 
     private function serializeNotaToko(NotaToko $notaToko): array
     {
+        $previewVersion = $this->previewVersion($notaToko);
+
         return [
             'id' => $notaToko->id,
             'company_id' => $notaToko->company_id,
@@ -83,7 +87,7 @@ class NotaTokoController extends Controller
             'updated_at' => optional($notaToko->updated_at)->toISOString(),
             'preview_url' => route('nota-toko.preview-pdf', [
                 'notaToko' => $notaToko->id,
-                'v' => optional($notaToko->updated_at)->timestamp ?? now()->timestamp,
+                'v' => $previewVersion,
             ]),
             'items' => $notaToko->items->map(fn (NotaTokoItem $item) => [
                 'id' => $item->id,
@@ -94,6 +98,24 @@ class NotaTokoController extends Controller
                 'amount' => (float) $item->amount,
             ])->values()->all(),
         ];
+    }
+
+    private function previewVersion(NotaToko $notaToko): int
+    {
+        $noteVersion = optional($notaToko->updated_at)->timestamp ?? now()->timestamp;
+        $templatePath = app(DocumentTemplateResolver::class)->resolveTemplatePath($notaToko->company_id, 'nota_toko');
+
+        if (! $templatePath) {
+            return $noteVersion;
+        }
+
+        $relativePath = ltrim($templatePath, '/\\');
+
+        if (! Storage::disk('public')->exists($relativePath)) {
+            return $noteVersion;
+        }
+
+        return max($noteVersion, Storage::disk('public')->lastModified($relativePath));
     }
 
     private function calculateItems(array $items): array
