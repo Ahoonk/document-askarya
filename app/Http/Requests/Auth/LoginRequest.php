@@ -34,6 +34,16 @@ class LoginRequest extends FormRequest
     }
 
     /**
+     * Normalize the incoming credentials before validation/authentication.
+     */
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'email' => Str::lower(trim((string) $this->input('email'))),
+        ]);
+    }
+
+    /**
      * Attempt to authenticate the request's credentials.
      *
      * @throws ValidationException
