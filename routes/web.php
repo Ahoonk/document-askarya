@@ -6,6 +6,7 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\SuratJalanController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\MitraController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\DocumentTemplateController;
 use App\Http\Controllers\NotaTokoController;
 use App\Http\Controllers\BeritaAcaraController;
@@ -208,7 +209,7 @@ Route::middleware('auth')->group(function () use ($renderModule) {
     Route::get('/mitra/{mitra}/edit', [MitraController::class, 'edit'])->name('mitra.edit');
     Route::put('/mitra/{mitra}', [MitraController::class, 'update'])->name('mitra.update');
     Route::delete('/mitra/{mitra}', [MitraController::class, 'destroy'])->name('mitra.destroy');
-    Route::get('/users', fn () => $renderModule('users'))->name('users.index');
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/document-templates', [DocumentTemplateController::class, 'index'])->name('document-templates.index');
     Route::get('/document-templates/create', [DocumentTemplateController::class, 'create'])->name('document-templates.create');
     Route::post('/document-templates', [DocumentTemplateController::class, 'store'])->name('document-templates.store');
