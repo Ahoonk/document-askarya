@@ -37,23 +37,30 @@ function store() {
 <template>
     <Head title="Buat Surat Jalan" />
 
-    <AuthenticatedLayout>
-        <div class="bg-[#fff2d9]">
-            <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <AuthenticatedLayout theme="login">
+        <div class="relative min-h-screen overflow-hidden bg-[#08111f] text-slate-100">
+            <div class="pointer-events-none absolute inset-0">
+                <div class="absolute left-[-8rem] top-[-8rem] h-96 w-96 rounded-full bg-red-500/20 blur-3xl"></div>
+                <div class="absolute right-[-7rem] top-24 h-[30rem] w-[30rem] rounded-full bg-blue-500/20 blur-3xl"></div>
+                <div class="absolute bottom-[-8rem] left-1/3 h-80 w-80 rounded-full bg-amber-400/10 blur-3xl"></div>
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.08),_transparent_35%),linear-gradient(135deg,_rgba(8,17,31,0.94),_rgba(9,14,27,0.98))]"></div>
+            </div>
+
+            <div class="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
                 <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
                     <div>
-                        <p class="text-xs uppercase tracking-[0.3em] text-blue-700">Delivery</p>
-                        <h1 class="mt-2 text-3xl font-bold text-slate-950">Buat Surat Jalan</h1>
-                        <p class="mt-2 text-sm text-slate-500">Pilih invoice lalu lengkapi data pengiriman.</p>
+                        <p class="text-xs uppercase tracking-[0.3em] text-blue-200/70">Delivery</p>
+                        <h1 class="mt-2 text-3xl font-bold text-white">Buat Surat Jalan</h1>
+                        <p class="mt-2 text-sm text-slate-300">Pilih invoice lalu lengkapi data pengiriman.</p>
                     </div>
 
-                    <Link :href="route('surat-jalan.index')" class="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700">
+                    <Link :href="route('surat-jalan.index')" class="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-slate-200 hover:border-blue-300/20 hover:bg-white/8">
                         Kembali
                     </Link>
                 </div>
 
                 <div class="grid gap-6 lg:grid-cols-[1fr_0.8fr]">
-                    <section class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
+                    <section class="rounded-[1.5rem] border border-white/10 bg-white p-6 shadow-[0_12px_30px_rgba(0,0,0,0.12)]">
                         <div v-if="availableInvoices.length" class="space-y-5">
                             <div>
                                 <InputLabel value="Invoice" />
@@ -116,14 +123,14 @@ function store() {
                             <p class="mt-2 text-sm text-slate-500">
                                 Semua invoice aktif sudah punya surat jalan, atau invoice belum dibuat dari alur sebelumnya.
                             </p>
-                            <Link :href="route('invoice.index')" class="mt-4 inline-flex rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white">
+                            <Link :href="route('invoice.index')" class="mt-4 inline-flex rounded-full bg-gradient-to-r from-blue-700 via-indigo-600 to-red-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-blue-700/20 hover:brightness-110">
                                 Ke Invoice
                             </Link>
                         </div>
                     </section>
 
-                    <aside class="space-y-4 rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
-                        <div class="rounded-2xl bg-[#fff2d9] p-4">
+                    <aside class="space-y-4 rounded-[1.5rem] border border-white/10 bg-white p-6 shadow-[0_12px_30px_rgba(0,0,0,0.12)]">
+                        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
                             <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Invoice Terpilih</p>
                             <div v-if="selectedInvoice" class="mt-3 space-y-2 text-sm text-slate-700">
                                 <p class="font-semibold text-slate-950">{{ selectedInvoice.nomor }}</p>
@@ -134,14 +141,14 @@ function store() {
                             <p v-else class="mt-3 text-sm text-slate-500">Belum ada pilihan invoice.</p>
                         </div>
 
-                        <div class="rounded-2xl bg-[#fff2d9] p-4">
+                        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
                             <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Nilai Invoice</p>
                             <p class="mt-2 text-2xl font-semibold text-slate-950">
                                 {{ selectedInvoice?.total ? formatCurrency(selectedInvoice.total) : '-' }}
                             </p>
                         </div>
 
-                        <div class="rounded-2xl bg-[#fff2d9] p-4">
+                        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
                             <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Catatan</p>
                             <p class="mt-2 text-sm leading-6 text-slate-700">
                                 Nomor surat jalan bisa mengikuti pola invoice, atau memakai seri baru jika format invoice tidak cocok.
@@ -150,6 +157,6 @@ function store() {
                     </aside>
                 </div>
             </div>
-        </div>
+            </div>
     </AuthenticatedLayout>
 </template>

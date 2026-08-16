@@ -20,10 +20,10 @@ const props = defineProps({
 });
 
 const actionBase = 'inline-flex flex-none items-center justify-center rounded-full px-4 py-2 text-sm font-semibold leading-none transition duration-200 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 whitespace-nowrap';
-const actionSecondary = `${actionBase} border border-slate-200 bg-white text-slate-700 shadow-sm hover:border-slate-300 hover:bg-slate-50 focus:ring-slate-400`;
-const actionPrimary = `${actionBase} bg-slate-950 text-white shadow-lg shadow-slate-950/15 hover:bg-slate-800 focus:ring-slate-900`;
-const actionInfo = `${actionBase} bg-blue-600 text-white shadow-lg shadow-blue-600/20 hover:bg-blue-500 focus:ring-blue-500`;
-const actionSuccess = `${actionBase} bg-emerald-600 text-white shadow-lg shadow-emerald-600/20 hover:bg-emerald-500 focus:ring-emerald-500`;
+const actionSecondary = `${actionBase} border border-slate-200 bg-white text-slate-700 shadow-sm hover:border-blue-200 hover:bg-blue-50 hover:text-blue-900 focus:ring-blue-400`;
+const actionPrimary = `${actionBase} bg-gradient-to-r from-slate-900 via-blue-700 to-red-600 text-white shadow-lg shadow-slate-950/15 hover:brightness-110 focus:ring-slate-900`;
+const actionInfo = `${actionBase} bg-gradient-to-r from-blue-700 via-indigo-600 to-red-600 text-white shadow-lg shadow-blue-700/20 hover:brightness-110 focus:ring-blue-500`;
+const actionSuccess = `${actionBase} bg-gradient-to-r from-blue-700 via-indigo-600 to-red-600 text-white shadow-lg shadow-blue-700/20 hover:brightness-110 focus:ring-blue-500`;
 const actionDanger = `${actionBase} bg-rose-600 text-white shadow-lg shadow-rose-600/20 hover:bg-rose-500 focus:ring-rose-500`;
 
 const previewTemplate = computed(() => {
@@ -56,14 +56,22 @@ function destroy() {
 <template>
     <Head :title="`Penawaran ${penawaran.nomor}`" />
 
-    <AuthenticatedLayout>
-        <div class="bg-[#fff2d9]">
+    <AuthenticatedLayout theme="login">
+        <div class="relative min-h-screen overflow-hidden bg-[#08111f] text-slate-100">
+            <div class="pointer-events-none absolute inset-0">
+                <div class="absolute left-[-8rem] top-[-8rem] h-96 w-96 rounded-full bg-red-500/20 blur-3xl"></div>
+                <div class="absolute right-[-7rem] top-24 h-[30rem] w-[30rem] rounded-full bg-blue-500/20 blur-3xl"></div>
+                <div class="absolute bottom-[-8rem] left-1/3 h-80 w-80 rounded-full bg-amber-400/10 blur-3xl"></div>
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.08),_transparent_35%),linear-gradient(135deg,_rgba(8,17,31,0.94),_rgba(9,14,27,0.98))]"></div>
+            </div>
+
+            <div class="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
             <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
                 <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
                     <div>
-                        <p class="text-xs uppercase tracking-[0.3em] text-blue-700">Detail Penawaran</p>
-                        <h1 class="mt-2 text-3xl font-bold text-slate-950">{{ penawaran.nomor }}</h1>
-                        <p class="mt-2 text-sm text-slate-500">{{ penawaran.to_company }}</p>
+                        <p class="text-xs uppercase tracking-[0.3em] text-blue-200/70">Detail Penawaran</p>
+                        <h1 class="mt-2 text-3xl font-bold text-white">{{ penawaran.nomor }}</h1>
+                        <p class="mt-2 text-sm text-slate-300">{{ penawaran.to_company }}</p>
                     </div>
 
                     <div class="flex flex-wrap gap-2 sm:flex-nowrap">
@@ -89,7 +97,7 @@ function destroy() {
                 </div>
 
                 <section class="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-                    <article class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
+                    <article class="rounded-[1.5rem] border border-white/10 bg-white p-6 shadow-[0_12px_30px_rgba(0,0,0,0.12)]">
                         <div class="grid gap-4 md:grid-cols-2">
                             <div>
                                 <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Tanggal</p>
@@ -120,17 +128,17 @@ function destroy() {
                         </div>
                     </article>
 
-                    <article class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
+                    <article class="rounded-[1.5rem] border border-white/10 bg-white p-6 shadow-[0_12px_30px_rgba(0,0,0,0.12)]">
                         <div class="grid gap-3">
-                            <div class="rounded-2xl bg-[#fff2d9] p-4">
+                            <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
                                 <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Subtotal</p>
                                 <p class="mt-2 text-xl font-semibold text-slate-950">{{ formatCurrency(penawaran.subtotal) }}</p>
                             </div>
-                            <div class="rounded-2xl bg-[#fff2d9] p-4">
+                            <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
                                 <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Tax</p>
                                 <p class="mt-2 text-xl font-semibold text-slate-950">{{ formatCurrency(penawaran.tax_amount) }}</p>
                             </div>
-                            <div class="rounded-2xl bg-blue-50 p-4">
+                            <div class="rounded-2xl border border-blue-200 bg-blue-50 p-4">
                                 <p class="text-xs uppercase tracking-[0.2em] text-blue-700">Total</p>
                                 <p class="mt-2 text-xl font-semibold text-blue-950">{{ formatCurrency(penawaran.total) }}</p>
                             </div>
@@ -138,14 +146,14 @@ function destroy() {
                     </article>
                 </section>
 
-                <section class="mt-6 overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white shadow-sm">
-                    <div class="border-b border-slate-200 px-6 py-4">
+                <section class="mt-6 overflow-hidden rounded-[1.5rem] border border-white/10 bg-white shadow-[0_12px_30px_rgba(0,0,0,0.12)]">
+                    <div class="border-b border-slate-200 bg-gradient-to-r from-slate-50 to-blue-50 px-6 py-4">
                         <h2 class="text-lg font-semibold text-slate-950">Item Penawaran</h2>
                     </div>
 
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-slate-200">
-                            <thead class="bg-[#fff2d9]">
+                            <thead class="bg-slate-50">
                                 <tr class="text-left text-xs uppercase tracking-[0.2em] text-slate-500">
                                     <th class="px-6 py-4">Nama</th>
                                     <th class="px-6 py-4">Rincian</th>
@@ -171,7 +179,7 @@ function destroy() {
 
                 <section class="mt-6 grid gap-6 lg:grid-cols-[1.25fr_0.75fr]">
                     <article class="overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white shadow-sm">
-                        <div class="border-b border-slate-200 px-6 py-4">
+                        <div class="border-b border-slate-200 bg-gradient-to-r from-slate-50 to-blue-50 px-6 py-4">
                             <h2 class="text-lg font-semibold text-slate-950">Preview Template</h2>
                         </div>
 
@@ -181,7 +189,7 @@ function destroy() {
                                     <div class="flex h-[80vh] items-center justify-center px-6 text-center">
                                         <div>
                                             <p class="text-lg font-semibold text-slate-950">Preview PDF tidak didukung di browser ini.</p>
-                                            <a :href="previewTemplate.url" target="_blank" rel="noreferrer" class="mt-4 inline-flex rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white">
+                                            <a :href="previewTemplate.url" target="_blank" rel="noreferrer" class="mt-4 inline-flex rounded-full bg-gradient-to-r from-blue-700 via-indigo-600 to-red-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-blue-700/20 transition hover:brightness-110">
                                                 Buka preview PDF
                                             </a>
                                         </div>
@@ -195,7 +203,7 @@ function destroy() {
                     </article>
 
                     <aside class="space-y-4 rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
-                        <div class="rounded-2xl bg-[#fff2d9] p-4">
+                            <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
                             <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Sumber Template</p>
                             <p class="mt-2 text-sm font-semibold text-slate-950">
                                 {{ previewTemplate.scope === 'mitra' ? 'Template Mitra' : 'Template Perusahaan' }}
@@ -205,12 +213,12 @@ function destroy() {
                             </p>
                         </div>
 
-                        <div class="rounded-2xl bg-[#fff2d9] p-4">
+                        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
                             <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Path Template</p>
                             <p class="mt-2 break-all text-sm text-slate-700">{{ previewTemplate.path || '-' }}</p>
                         </div>
 
-                        <div class="rounded-2xl bg-[#fff2d9] p-4">
+                        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
                             <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Catatan</p>
                             <p class="mt-2 text-sm leading-6 text-slate-700">
                                 Jika file template baru saja diganti, buka ulang halaman detail ini supaya preview mengambil snapshot template terbaru.
@@ -218,6 +226,7 @@ function destroy() {
                         </div>
                     </aside>
                 </section>
+            </div>
             </div>
         </div>
     </AuthenticatedLayout>

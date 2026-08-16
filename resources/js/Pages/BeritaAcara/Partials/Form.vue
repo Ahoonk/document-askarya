@@ -93,12 +93,12 @@ function submit() {
 
 <template>
     <form @submit.prevent="submit" class="space-y-6">
-        <section class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
+        <section class="rounded-[1.5rem] border border-white/10 bg-white/5 p-6 shadow-2xl shadow-slate-950/25 backdrop-blur">
             <div class="grid gap-6 lg:grid-cols-[1fr_0.75fr]">
                 <div class="space-y-5">
                     <div v-if="availableInvoices.length" class="space-y-2">
                         <InputLabel value="Invoice" />
-                        <select v-model="form.invoice_id" class="mt-2 block w-full rounded-xl border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" :disabled="method === 'put'">
+                        <select v-model="form.invoice_id" class="mt-2 block w-full rounded-xl border-white/10 bg-slate-950/50 text-slate-100 shadow-sm focus:border-sky-400 focus:ring-sky-400" :disabled="method === 'put'">
                             <option value="">Pilih invoice</option>
                             <option v-for="invoice in availableInvoices" :key="invoice.id" :value="invoice.id">
                                 {{ invoice.nomor }} - {{ invoice.customer_name }}
@@ -107,19 +107,19 @@ function submit() {
                         <InputError class="mt-2" :message="form.errors.invoice_id" />
                     </div>
 
-                    <div v-else-if="beritaAcara?.invoice" class="rounded-2xl bg-slate-50 p-4">
-                        <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Invoice Terpilih</p>
-                        <p class="mt-2 text-sm font-semibold text-slate-950">{{ beritaAcara.invoice.nomor }}</p>
-                        <p class="mt-1 text-sm text-slate-600">{{ beritaAcara.invoice.customer_name }}</p>
-                        <p class="mt-2 text-xs text-slate-500">Relasi invoice tidak bisa diubah setelah berita acara dibuat.</p>
+                    <div v-else-if="beritaAcara?.invoice" class="rounded-2xl border border-white/10 bg-slate-950/40 p-4">
+                        <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Invoice Terpilih</p>
+                        <p class="mt-2 text-sm font-semibold text-white">{{ beritaAcara.invoice.nomor }}</p>
+                        <p class="mt-1 text-sm text-slate-300">{{ beritaAcara.invoice.customer_name }}</p>
+                        <p class="mt-2 text-xs text-slate-400">Relasi invoice tidak bisa diubah setelah berita acara dibuat.</p>
                     </div>
 
-                    <div v-else class="rounded-2xl border border-red-200 bg-red-50 p-4">
-                        <p class="text-sm font-semibold text-red-900">Tidak ada invoice siap diproses</p>
-                        <p class="mt-2 text-sm leading-6 text-red-800">
+                    <div v-else class="rounded-2xl border border-rose-500/20 bg-rose-500/10 p-4">
+                        <p class="text-sm font-semibold text-rose-100">Tidak ada invoice siap diproses</p>
+                        <p class="mt-2 text-sm leading-6 text-rose-200">
                             Berita Acara hanya bisa dibuat dari invoice yang belum punya berita acara.
                         </p>
-                        <Link :href="route('invoice.index')" class="mt-3 inline-flex rounded-full bg-red-600 px-4 py-2 text-xs font-semibold text-white">
+                        <Link :href="route('invoice.index')" class="mt-3 inline-flex rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-rose-600 px-4 py-2 text-xs font-semibold text-white">
                             Ke Invoice
                         </Link>
                     </div>
@@ -144,8 +144,8 @@ function submit() {
                         <InputError class="mt-2" :message="form.errors.perihal" />
                     </div>
 
-                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                        <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Isi Manual</p>
+                    <div class="rounded-2xl border border-white/10 bg-slate-950/40 p-4">
+                        <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Isi Manual</p>
                         <div class="mt-4 grid gap-4 md:grid-cols-2">
                             <div>
                                 <InputLabel for="nomor_perjanjian" value="Nomor Perjanjian" />
@@ -178,13 +178,13 @@ function submit() {
                         <div class="mt-4 grid gap-4 md:grid-cols-2">
                             <div>
                                 <InputLabel for="pihak_pertama_alamat" value="Pihak Pertama Alamat" />
-                                <textarea id="pihak_pertama_alamat" v-model="form.pihak_pertama_alamat" rows="4" class="mt-2 block w-full rounded-xl border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
+                                <textarea id="pihak_pertama_alamat" v-model="form.pihak_pertama_alamat" rows="4" class="mt-2 block w-full rounded-xl border-white/10 bg-slate-950/50 text-slate-100 shadow-sm focus:border-sky-400 focus:ring-sky-400"></textarea>
                                 <InputError class="mt-2" :message="form.errors.pihak_pertama_alamat" />
                             </div>
 
                             <div>
                                 <InputLabel for="pihak_kedua_alamat" value="Pihak Kedua Alamat" />
-                                <textarea id="pihak_kedua_alamat" v-model="form.pihak_kedua_alamat" rows="4" class="mt-2 block w-full rounded-xl border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
+                                <textarea id="pihak_kedua_alamat" v-model="form.pihak_kedua_alamat" rows="4" class="mt-2 block w-full rounded-xl border-white/10 bg-slate-950/50 text-slate-100 shadow-sm focus:border-sky-400 focus:ring-sky-400"></textarea>
                                 <InputError class="mt-2" :message="form.errors.pihak_kedua_alamat" />
                             </div>
                         </div>
@@ -212,32 +212,32 @@ function submit() {
 
                     <div>
                         <InputLabel for="keterangan_akhir" value="Keterangan Akhir" />
-                        <textarea id="keterangan_akhir" v-model="form.keterangan_akhir" rows="5" class="mt-2 block w-full rounded-xl border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
+                        <textarea id="keterangan_akhir" v-model="form.keterangan_akhir" rows="5" class="mt-2 block w-full rounded-xl border-white/10 bg-slate-950/50 text-slate-100 shadow-sm focus:border-sky-400 focus:ring-sky-400"></textarea>
                         <InputError class="mt-2" :message="form.errors.keterangan_akhir" />
                     </div>
                 </div>
 
-                <aside class="space-y-4 rounded-2xl bg-slate-50 p-4">
-                    <div class="rounded-2xl bg-white p-4">
-                        <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Nomor Preview</p>
-                        <p class="mt-2 text-lg font-semibold text-slate-950">{{ beritaAcara?.nomor || '-' }}</p>
+                <aside class="space-y-4 rounded-2xl border border-white/10 bg-slate-950/40 p-4">
+                    <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                        <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Nomor Preview</p>
+                        <p class="mt-2 text-lg font-semibold text-white">{{ beritaAcara?.nomor || '-' }}</p>
                     </div>
 
-                    <div class="rounded-2xl bg-white p-4">
-                        <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Invoice</p>
-                        <div v-if="selectedInvoice" class="mt-2 space-y-1 text-sm text-slate-700">
-                            <p class="font-semibold text-slate-950">{{ selectedInvoice.nomor }}</p>
+                    <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                        <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Invoice</p>
+                        <div v-if="selectedInvoice" class="mt-2 space-y-1 text-sm text-slate-300">
+                            <p class="font-semibold text-white">{{ selectedInvoice.nomor }}</p>
                             <p>{{ selectedInvoice.customer_name }}</p>
                             <p>{{ selectedInvoice.customer_address || '-' }}</p>
                             <p>Tanggal: {{ formatDate(selectedInvoice.tanggal) }}</p>
                             <p>Total: {{ formatCurrency(selectedInvoice.total || 0) }}</p>
                         </div>
-                        <p v-else class="mt-2 text-sm text-slate-500">Belum ada invoice yang dipilih.</p>
+                        <p v-else class="mt-2 text-sm text-slate-400">Belum ada invoice yang dipilih.</p>
                     </div>
 
-                    <div class="rounded-2xl bg-white p-4">
-                        <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Catatan</p>
-                        <p class="mt-2 text-sm leading-6 text-slate-700">
+                    <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                        <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Catatan</p>
+                        <p class="mt-2 text-sm leading-6 text-slate-300">
                             Saat disimpan, berita acara akan mendapat snapshot data agar arsipnya tetap konsisten.
                         </p>
                     </div>
@@ -245,12 +245,12 @@ function submit() {
             </div>
         </section>
 
-        <section class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
+        <section class="rounded-[1.5rem] border border-white/10 bg-white/5 p-6 shadow-2xl shadow-slate-950/25 backdrop-blur">
             <div class="flex flex-wrap items-center justify-between gap-3">
-                <Link :href="route('berita-acara.index')" class="text-sm font-semibold text-slate-600">
+                <Link :href="route('berita-acara.index')" class="text-sm font-semibold text-slate-300">
                     Batal
                 </Link>
-                <PrimaryButton :disabled="form.processing || !canSubmit">
+                <PrimaryButton :disabled="form.processing || !canSubmit" class="bg-gradient-to-r from-blue-600 via-indigo-600 to-rose-600">
                     {{ form.processing ? 'Menyimpan...' : canSubmit ? 'Simpan Berita Acara' : 'Tidak ada invoice' }}
                 </PrimaryButton>
             </div>

@@ -66,12 +66,12 @@ function submit() {
 
 <template>
     <form @submit.prevent="submit" class="space-y-6">
-        <section class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
+        <section class="rounded-[1.5rem] border border-white/10 bg-white/5 p-6 shadow-2xl shadow-slate-950/25 backdrop-blur">
             <div class="grid gap-6 lg:grid-cols-[1fr_0.8fr]">
                 <div class="space-y-5">
                     <div v-if="availableInvoices.length && method !== 'put'" class="space-y-2">
                         <InputLabel value="Invoice" />
-                        <select v-model="form.invoice_id" class="mt-2 block w-full rounded-xl border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <select v-model="form.invoice_id" class="mt-2 block w-full rounded-xl border-white/10 bg-slate-950/50 text-slate-100 shadow-sm focus:border-sky-400 focus:ring-sky-400">
                             <option value="">Pilih invoice</option>
                             <option v-for="invoice in availableInvoices" :key="invoice.id" :value="invoice.id">
                                 {{ invoice.nomor }} - {{ invoice.customer_name }}
@@ -80,22 +80,22 @@ function submit() {
                         <InputError class="mt-2" :message="form.errors.invoice_id" />
                     </div>
 
-                    <div v-else class="rounded-2xl bg-slate-50 p-4">
-                        <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Invoice</p>
-                        <div v-if="selectedInvoice" class="mt-2 space-y-1 text-sm text-slate-700">
-                            <p class="font-semibold text-slate-950">{{ selectedInvoice.nomor }}</p>
+                    <div v-else class="rounded-2xl border border-white/10 bg-slate-950/40 p-4">
+                        <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Invoice</p>
+                        <div v-if="selectedInvoice" class="mt-2 space-y-1 text-sm text-slate-300">
+                            <p class="font-semibold text-white">{{ selectedInvoice.nomor }}</p>
                             <p>{{ selectedInvoice.customer_name }}</p>
                             <p>{{ selectedInvoice.customer_address || '-' }}</p>
                             <p>Tanggal: {{ formatDate(selectedInvoice.tanggal) }}</p>
                             <p>Total: {{ formatCurrency(selectedInvoice.total || 0) }}</p>
                         </div>
-                        <p v-else class="mt-2 text-sm text-slate-500">Tidak ada invoice yang tersedia.</p>
+                        <p v-else class="mt-2 text-sm text-slate-400">Tidak ada invoice yang tersedia.</p>
                     </div>
 
                     <div class="grid gap-4 md:grid-cols-2">
                         <div>
                             <InputLabel for="payment_status" value="Status Pembayaran" />
-                            <select id="payment_status" v-model="form.payment_status" class="mt-2 block w-full rounded-xl border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            <select id="payment_status" v-model="form.payment_status" class="mt-2 block w-full rounded-xl border-white/10 bg-slate-950/50 text-slate-100 shadow-sm focus:border-sky-400 focus:ring-sky-400">
                                 <option value="unpaid">unpaid</option>
                                 <option value="paid">paid</option>
                             </select>
@@ -114,22 +114,22 @@ function submit() {
                         <input
                             id="dokumen"
                             type="file"
-                            class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-2 shadow-sm"
+                            class="mt-2 block w-full rounded-xl border border-white/10 bg-slate-950/50 px-3 py-2 text-slate-100 shadow-sm"
                             @change="(event) => { form.dokumen = event.target.files?.[0] ?? null }"
                         >
                         <InputError class="mt-2" :message="form.errors.dokumen" />
                     </div>
                 </div>
 
-                <aside class="space-y-4 rounded-2xl bg-slate-50 p-4">
-                    <div class="rounded-2xl bg-white p-4">
-                        <p class="text-xs uppercase tracking-[0.2em] text-slate-500">File Terpilih</p>
-                        <p class="mt-2 text-sm font-medium text-slate-700">{{ selectedFileLabel }}</p>
+                <aside class="space-y-4 rounded-2xl border border-white/10 bg-slate-950/40 p-4">
+                    <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                        <p class="text-xs uppercase tracking-[0.2em] text-slate-400">File Terpilih</p>
+                        <p class="mt-2 text-sm font-medium text-white">{{ selectedFileLabel }}</p>
                     </div>
 
-                    <div class="rounded-2xl bg-white p-4">
-                        <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Catatan</p>
-                        <p class="mt-2 text-sm leading-6 text-slate-700">
+                    <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                        <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Catatan</p>
+                        <p class="mt-2 text-sm leading-6 text-slate-300">
                             Jika status pembayaran diubah menjadi paid, tanggal bayar sebaiknya diisi agar arsipnya konsisten.
                         </p>
                     </div>
@@ -137,12 +137,12 @@ function submit() {
             </div>
         </section>
 
-        <section class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
+        <section class="rounded-[1.5rem] border border-white/10 bg-white/5 p-6 shadow-2xl shadow-slate-950/25 backdrop-blur">
             <div class="flex flex-wrap items-center justify-between gap-3">
-                <Link :href="route('faktur-pajak.index')" class="text-sm font-semibold text-slate-600">
+                <Link :href="route('faktur-pajak.index')" class="text-sm font-semibold text-slate-300">
                     Batal
                 </Link>
-                <PrimaryButton :disabled="form.processing">
+                <PrimaryButton :disabled="form.processing" class="bg-gradient-to-r from-blue-600 via-indigo-600 to-rose-600">
                     {{ form.processing ? 'Menyimpan...' : 'Simpan Faktur Pajak' }}
                 </PrimaryButton>
             </div>

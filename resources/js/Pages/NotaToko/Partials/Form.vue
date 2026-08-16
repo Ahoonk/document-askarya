@@ -114,11 +114,11 @@ function submit() {
 
 <template>
     <form @submit.prevent="submit" class="space-y-6">
-        <section class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
+        <section class="rounded-[1.5rem] border border-white/10 bg-white/5 p-6 shadow-2xl shadow-slate-950/25 backdrop-blur">
             <div class="grid gap-6 lg:grid-cols-2">
                 <div>
                     <InputLabel value="Nomor Nota Toko" />
-                    <div class="mt-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700">
+                    <div class="mt-2 rounded-xl border border-white/10 bg-slate-950/50 px-4 py-3 text-sm font-semibold text-slate-100">
                         {{ notaToko?.nomor || meta?.nomor_preview || '-' }}
                     </div>
                 </div>
@@ -136,7 +136,7 @@ function submit() {
                         <option v-for="customer in meta?.customers || []" :key="customer.id" :value="customer.nama" />
                     </datalist>
                     <div class="mt-2 flex flex-wrap gap-2">
-                        <button type="button" @click="applyCustomerData" class="rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-800">
+                        <button type="button" @click="applyCustomerData" class="rounded-full border border-sky-300/30 bg-gradient-to-r from-blue-600/20 via-indigo-600/20 to-rose-600/20 px-3 py-1 text-xs font-semibold text-sky-200">
                             Pakai data customer
                         </button>
                     </div>
@@ -151,13 +151,13 @@ function submit() {
 
                 <div class="lg:col-span-2">
                     <InputLabel for="alamat" value="Alamat" />
-                    <textarea id="alamat" v-model="form.alamat" rows="3" class="mt-2 block w-full rounded-xl border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
+                    <textarea id="alamat" v-model="form.alamat" rows="3" class="mt-2 block w-full rounded-xl border-white/10 bg-slate-950/50 text-slate-100 shadow-sm focus:border-sky-400 focus:ring-sky-400"></textarea>
                     <InputError class="mt-2" :message="form.errors.alamat" />
                 </div>
 
                 <div class="lg:col-span-2">
                     <InputLabel for="keterangan" value="Keterangan" />
-                    <textarea id="keterangan" v-model="form.keterangan" rows="4" class="mt-2 block w-full rounded-xl border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
+                    <textarea id="keterangan" v-model="form.keterangan" rows="4" class="mt-2 block w-full rounded-xl border-white/10 bg-slate-950/50 text-slate-100 shadow-sm focus:border-sky-400 focus:ring-sky-400"></textarea>
                     <InputError class="mt-2" :message="form.errors.keterangan" />
                 </div>
 
@@ -169,7 +169,7 @@ function submit() {
 
                 <div>
                     <InputLabel for="payment_status" value="Status Pembayaran" />
-                    <select id="payment_status" v-model="form.payment_status" class="mt-2 block w-full rounded-xl border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <select id="payment_status" v-model="form.payment_status" class="mt-2 block w-full rounded-xl border-white/10 bg-slate-950/50 text-slate-100 shadow-sm focus:border-sky-400 focus:ring-sky-400">
                         <option v-for="option in meta?.options?.payment_status || []" :key="option" :value="option">
                             {{ option }}
                         </option>
@@ -185,20 +185,20 @@ function submit() {
             </div>
         </section>
 
-        <section class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
+        <section class="rounded-[1.5rem] border border-white/10 bg-white/5 p-6 shadow-2xl shadow-slate-950/25 backdrop-blur">
             <div class="flex flex-wrap items-center justify-between gap-4">
                 <div>
-                    <h2 class="text-lg font-semibold text-slate-950">Item Nota Toko</h2>
-                    <p class="text-sm text-slate-500">Isi item dan sistem akan hitung subtotal, tax, dan total.</p>
+                    <h2 class="text-lg font-semibold text-white">Item Nota Toko</h2>
+                    <p class="text-sm text-slate-300">Isi item dan sistem akan hitung subtotal, tax, dan total.</p>
                 </div>
 
-                <button type="button" @click="addItem" class="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white">
+                <button type="button" @click="addItem" class="rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-rose-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-rose-950/20">
                     Tambah Item
                 </button>
             </div>
 
             <div class="mt-5 space-y-4">
-                <article v-for="(item, index) in form.items" :key="index" class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <article v-for="(item, index) in form.items" :key="index" class="rounded-2xl border border-white/10 bg-slate-950/40 p-4">
                     <div class="grid gap-4 lg:grid-cols-12">
                         <div class="lg:col-span-5">
                             <InputLabel :value="`Nama Item ${index + 1}`" />
@@ -214,7 +214,7 @@ function submit() {
 
                         <div class="lg:col-span-2">
                             <InputLabel value="Satuan" />
-                            <select v-model="item.satuan" class="mt-2 block w-full rounded-xl border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            <select v-model="item.satuan" class="mt-2 block w-full rounded-xl border-white/10 bg-slate-950/50 text-slate-100 shadow-sm focus:border-sky-400 focus:ring-sky-400">
                                 <option v-for="option in meta?.options?.satuan || []" :key="option" :value="option">
                                     {{ option }}
                                 </option>
@@ -230,11 +230,11 @@ function submit() {
                     </div>
 
                     <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
-                        <p class="text-sm text-slate-600">
-                            Nilai item: <span class="font-semibold text-slate-900">{{ formatCurrency(Number(item.qty || 0) * Number(item.unit_price || 0)) }}</span>
+                        <p class="text-sm text-slate-300">
+                            Nilai item: <span class="font-semibold text-white">{{ formatCurrency(Number(item.qty || 0) * Number(item.unit_price || 0)) }}</span>
                         </p>
 
-                        <button type="button" @click="removeItem(index)" class="text-sm font-semibold text-rose-600">
+                        <button type="button" @click="removeItem(index)" class="text-sm font-semibold text-rose-300">
                             Hapus item
                         </button>
                     </div>
@@ -243,30 +243,30 @@ function submit() {
         </section>
 
         <section class="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-            <div class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
-                <h3 class="text-lg font-semibold text-slate-950">Ringkasan</h3>
+            <div class="rounded-[1.5rem] border border-white/10 bg-white/5 p-6 shadow-2xl shadow-slate-950/25 backdrop-blur">
+                <h3 class="text-lg font-semibold text-white">Ringkasan</h3>
                 <div class="mt-4 grid gap-3 sm:grid-cols-3">
-                    <div class="rounded-2xl bg-slate-50 p-4">
-                        <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Subtotal</p>
-                        <p class="mt-2 text-xl font-semibold text-slate-950">{{ formatCurrency(subtotal) }}</p>
+                    <div class="rounded-2xl border border-white/10 bg-slate-950/40 p-4">
+                        <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Subtotal</p>
+                        <p class="mt-2 text-xl font-semibold text-white">{{ formatCurrency(subtotal) }}</p>
                     </div>
-                    <div class="rounded-2xl bg-slate-50 p-4">
-                        <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Tax</p>
-                        <p class="mt-2 text-xl font-semibold text-slate-950">{{ formatCurrency(taxAmount) }}</p>
+                    <div class="rounded-2xl border border-white/10 bg-slate-950/40 p-4">
+                        <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Tax</p>
+                        <p class="mt-2 text-xl font-semibold text-white">{{ formatCurrency(taxAmount) }}</p>
                     </div>
-                    <div class="rounded-2xl bg-blue-50 p-4">
-                        <p class="text-xs uppercase tracking-[0.2em] text-blue-700">Total</p>
-                        <p class="mt-2 text-xl font-semibold text-blue-950">{{ formatCurrency(total) }}</p>
+                    <div class="rounded-2xl border border-sky-400/20 bg-gradient-to-r from-blue-600/20 via-indigo-600/20 to-rose-600/20 p-4">
+                        <p class="text-xs uppercase tracking-[0.2em] text-sky-300">Total</p>
+                        <p class="mt-2 text-xl font-semibold text-white">{{ formatCurrency(total) }}</p>
                     </div>
                 </div>
             </div>
 
-            <div class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
+            <div class="rounded-[1.5rem] border border-white/10 bg-white/5 p-6 shadow-2xl shadow-slate-950/25 backdrop-blur">
                 <div class="flex flex-wrap items-center justify-between gap-3">
-                    <Link :href="route('nota-toko.index')" class="text-sm font-semibold text-slate-600">
+                    <Link :href="route('nota-toko.index')" class="text-sm font-semibold text-slate-300">
                         Batal
                     </Link>
-                    <PrimaryButton :disabled="form.processing">
+                    <PrimaryButton :disabled="form.processing" class="bg-gradient-to-r from-blue-600 via-indigo-600 to-rose-600">
                         {{ form.processing ? 'Menyimpan...' : 'Simpan Nota Toko' }}
                     </PrimaryButton>
                 </div>
