@@ -50,7 +50,7 @@ function submit() {
 
 <template>
     <form @submit.prevent="submit" class="space-y-6">
-        <section class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
+        <section class="rounded-[1.5rem] border border-white/10 bg-white/5 p-6 shadow-2xl shadow-slate-950/25 backdrop-blur">
             <div class="grid gap-5 md:grid-cols-2">
                 <div>
                     <InputLabel for="nama" value="Nama Mitra" />
@@ -66,16 +66,16 @@ function submit() {
 
                 <div class="md:col-span-2">
                     <InputLabel for="alamat" value="Alamat" />
-                    <textarea id="alamat" v-model="form.alamat" rows="5" class="mt-2 block w-full rounded-xl border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
+                    <textarea id="alamat" v-model="form.alamat" rows="5" class="mt-2 block w-full rounded-xl border-white/10 bg-slate-950/50 text-slate-100 shadow-sm focus:border-sky-400 focus:ring-sky-400"></textarea>
                     <InputError class="mt-2" :message="form.errors.alamat" />
                 </div>
             </div>
         </section>
 
-        <section class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
+        <section class="rounded-[1.5rem] border border-white/10 bg-white/5 p-6 shadow-2xl shadow-slate-950/25 backdrop-blur">
             <div class="mb-4">
-                <h2 class="text-lg font-semibold text-slate-950">Nomor Override Dokumen</h2>
-                <p class="text-sm text-slate-500">Isi jika mitra punya format nomor khusus untuk dokumen turunannya.</p>
+                <h2 class="text-lg font-semibold text-white">Nomor Override Dokumen</h2>
+                <p class="text-sm text-slate-300">Isi jika mitra punya format nomor khusus untuk dokumen turunannya.</p>
             </div>
 
             <div class="grid gap-5 md:grid-cols-2">
@@ -105,10 +105,10 @@ function submit() {
             </div>
         </section>
 
-        <section class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
+        <section class="rounded-[1.5rem] border border-white/10 bg-white/5 p-6 shadow-2xl shadow-slate-950/25 backdrop-blur">
             <div class="mb-4">
-                <h2 class="text-lg font-semibold text-slate-950">Path Template</h2>
-                <p class="text-sm text-slate-500">Gunakan path file bila template dokumen ingin diarahkan per mitra.</p>
+                <h2 class="text-lg font-semibold text-white">Path Template</h2>
+                <p class="text-sm text-slate-300">Gunakan path file bila template dokumen ingin diarahkan per mitra.</p>
             </div>
 
             <div class="grid gap-5 md:grid-cols-2">
@@ -138,12 +138,12 @@ function submit() {
             </div>
         </section>
 
-        <section class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
+        <section class="rounded-[1.5rem] border border-white/10 bg-white/5 p-6 shadow-2xl shadow-slate-950/25 backdrop-blur">
             <div class="flex flex-wrap items-center justify-between gap-3">
-                <Link :href="route('mitra.index')" class="text-sm font-semibold text-slate-600">
+                <Link :href="route('mitra.index')" class="text-sm font-semibold text-slate-300">
                     Batal
                 </Link>
-                <PrimaryButton :disabled="form.processing">
+                <PrimaryButton :disabled="form.processing" class="bg-gradient-to-r from-blue-600 via-indigo-600 to-rose-600">
                     {{ form.processing ? 'Menyimpan...' : 'Simpan Mitra' }}
                 </PrimaryButton>
             </div>

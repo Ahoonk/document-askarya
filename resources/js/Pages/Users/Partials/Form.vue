@@ -56,7 +56,7 @@ function submit() {
 
 <template>
     <form @submit.prevent="submit" class="space-y-6">
-        <section class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
+        <section class="rounded-[1.5rem] border border-white/10 bg-white/5 p-6 shadow-2xl shadow-slate-950/25 backdrop-blur">
             <div class="grid gap-5 md:grid-cols-2">
                 <div>
                     <InputLabel for="name" value="Nama" />
@@ -72,7 +72,7 @@ function submit() {
 
                 <div>
                     <InputLabel for="company_id" value="Company" />
-                    <select id="company_id" v-model="form.company_id" class="mt-2 block w-full rounded-xl border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <select id="company_id" v-model="form.company_id" class="mt-2 block w-full rounded-xl border-white/10 bg-slate-950/50 text-slate-100 shadow-sm focus:border-sky-400 focus:ring-sky-400">
                         <option value="">-</option>
                         <option v-for="company in companies" :key="company.id" :value="company.id">
                             {{ company.name }}
@@ -83,7 +83,7 @@ function submit() {
 
                 <div>
                     <InputLabel for="role" value="Role" />
-                    <select id="role" v-model="form.role" class="mt-2 block w-full rounded-xl border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <select id="role" v-model="form.role" class="mt-2 block w-full rounded-xl border-white/10 bg-slate-950/50 text-slate-100 shadow-sm focus:border-sky-400 focus:ring-sky-400">
                         <option v-for="role in options?.roles || []" :key="role" :value="role">
                             {{ role === 'superadmin' ? 'Superadmin' : 'Admin' }}
                         </option>
@@ -105,12 +105,12 @@ function submit() {
             </div>
         </section>
 
-        <section class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
+        <section class="rounded-[1.5rem] border border-white/10 bg-white/5 p-6 shadow-2xl shadow-slate-950/25 backdrop-blur">
             <div class="flex flex-wrap items-center justify-between gap-3">
-                <Link :href="route('users.index')" class="text-sm font-semibold text-slate-600">
+                <Link :href="route('users.index')" class="text-sm font-semibold text-slate-300">
                     Batal
                 </Link>
-                <PrimaryButton :disabled="form.processing">
+                <PrimaryButton :disabled="form.processing" class="bg-gradient-to-r from-blue-600 via-indigo-600 to-rose-600">
                     {{ form.processing ? 'Menyimpan...' : 'Simpan User' }}
                 </PrimaryButton>
             </div>

@@ -55,7 +55,7 @@ function submit() {
 
 <template>
     <form @submit.prevent="submit" class="space-y-6">
-        <section class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
+        <section class="rounded-[1.5rem] border border-white/10 bg-white/5 p-6 shadow-2xl shadow-slate-950/25 backdrop-blur">
             <div class="grid gap-5 md:grid-cols-2">
                 <div>
                     <InputLabel for="name" value="Nama Template" />
@@ -65,7 +65,7 @@ function submit() {
 
                 <div>
                     <InputLabel for="document_type" value="Tipe Dokumen" />
-                    <select id="document_type" v-model="form.document_type" class="mt-2 block w-full rounded-xl border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <select id="document_type" v-model="form.document_type" class="mt-2 block w-full rounded-xl border-white/10 bg-slate-950/50 text-slate-100 shadow-sm focus:border-sky-400 focus:ring-sky-400">
                         <option v-for="type in options?.document_types || []" :key="type" :value="type">
                             {{ type }}
                         </option>
@@ -77,7 +77,7 @@ function submit() {
                     <InputLabel for="file_path" value="File Path / View Path" />
                     <TextInput id="file_path" v-model="form.file_path" type="text" class="mt-2 block w-full" placeholder="document-templates/penawaran.pdf atau resources.views.docs.invoice" />
                     <InputError class="mt-2" :message="form.errors.file_path" />
-                    <p class="mt-2 text-xs leading-5 text-slate-500">
+                    <p class="mt-2 text-xs leading-5 text-slate-400">
                         Isi dengan path file di storage public atau path view Blade. Jika upload file di bawah, path akan diisi otomatis.
                     </p>
                 </div>
@@ -87,22 +87,22 @@ function submit() {
                     <input
                         id="template_file"
                         type="file"
-                        class="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-2 shadow-sm"
+                        class="mt-2 block w-full rounded-xl border border-white/10 bg-slate-950/50 px-3 py-2 text-slate-100 shadow-sm"
                         @change="(event) => { form.template_file = event.target.files?.[0] ?? null }"
                     >
                     <InputError class="mt-2" :message="form.errors.template_file" />
-                    <p class="mt-2 text-xs leading-5 text-slate-500">
+                    <p class="mt-2 text-xs leading-5 text-slate-400">
                         File yang diupload disimpan ke storage public. Saat edit, upload file baru jika ingin mengganti file lama.
                     </p>
                 </div>
             </div>
         </section>
 
-        <section class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
+        <section class="rounded-[1.5rem] border border-white/10 bg-white/5 p-6 shadow-2xl shadow-slate-950/25 backdrop-blur">
             <div class="flex items-start justify-between gap-4">
                 <div>
                     <InputLabel for="is_default" value="Jadikan Default" />
-                    <label class="mt-3 flex items-center gap-3 text-sm text-slate-700">
+                    <label class="mt-3 flex items-center gap-3 text-sm text-slate-300">
                         <Checkbox id="is_default" v-model:checked="form.is_default" />
                         <span>Template ini dipakai sebagai default untuk tipe dokumen yang sama.</span>
                     </label>
@@ -111,17 +111,17 @@ function submit() {
 
                 <div class="text-right">
                     <p class="text-xs uppercase tracking-[0.2em] text-slate-400">File Terpilih</p>
-                    <p class="mt-2 text-sm font-medium text-slate-700">{{ selectedFileLabel }}</p>
+                    <p class="mt-2 text-sm font-medium text-slate-100">{{ selectedFileLabel }}</p>
                 </div>
             </div>
         </section>
 
-        <section class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
+        <section class="rounded-[1.5rem] border border-white/10 bg-white/5 p-6 shadow-2xl shadow-slate-950/25 backdrop-blur">
             <div class="flex flex-wrap items-center justify-between gap-3">
-                <Link :href="route('document-templates.index')" class="text-sm font-semibold text-slate-600">
+                <Link :href="route('document-templates.index')" class="text-sm font-semibold text-slate-300">
                     Batal
                 </Link>
-                <PrimaryButton :disabled="form.processing">
+                <PrimaryButton :disabled="form.processing" class="bg-gradient-to-r from-blue-600 via-indigo-600 to-rose-600">
                     {{ form.processing ? 'Menyimpan...' : 'Simpan Template' }}
                 </PrimaryButton>
             </div>
