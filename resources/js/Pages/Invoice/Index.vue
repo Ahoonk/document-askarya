@@ -81,12 +81,22 @@ const paymentStyles = {
                                     </td>
                                     <td class="px-6 py-4 font-semibold text-slate-950">{{ formatCurrency(invoice.total) }}</td>
                                     <td class="px-6 py-4">
-                                        <a :href="route('invoice.preview-pdf', { invoice: invoice.id })" target="_blank" rel="noreferrer" class="mr-2 rounded-full border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-semibold text-blue-800">
-                                            Preview
-                                        </a>
-                                        <Link :href="route('invoice.show', invoice.id)" class="rounded-full border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700">
-                                            Detail
-                                        </Link>
+                                        <div class="flex flex-wrap items-center gap-2">
+                                            <a
+                                                :href="route('invoice.preview-pdf', { invoice: invoice.id })"
+                                                target="_blank"
+                                                rel="noreferrer"
+                                                class="inline-flex rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-100 shadow-sm transition hover:border-sky-300/40 hover:bg-sky-500/10"
+                                            >
+                                                Preview
+                                            </a>
+                                            <Link
+                                                :href="route('invoice.show', invoice.id)"
+                                                class="inline-flex rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-100 shadow-sm transition hover:border-sky-300/40 hover:bg-sky-500/10"
+                                            >
+                                                Detail
+                                            </Link>
+                                        </div>
                                     </td>
                                 </tr>
                             </tbody>
