@@ -86,13 +86,13 @@ const paymentStyles = {
                                                 :href="route('invoice.preview-pdf', { invoice: invoice.id })"
                                                 target="_blank"
                                                 rel="noreferrer"
-                                                class="inline-flex rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-100 shadow-sm transition hover:border-sky-300/40 hover:bg-sky-500/10"
+                                                class="inline-flex rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-rose-600 px-3 py-2 text-xs font-semibold text-white shadow-lg shadow-blue-700/15 transition hover:brightness-110"
                                             >
                                                 Preview
                                             </a>
                                             <Link
                                                 :href="route('invoice.show', invoice.id)"
-                                                class="inline-flex rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-100 shadow-sm transition hover:border-sky-300/40 hover:bg-sky-500/10"
+                                                class="inline-flex rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-900"
                                             >
                                                 Detail
                                             </Link>
