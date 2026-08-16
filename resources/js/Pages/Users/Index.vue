@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
 import { formatDate } from '@/utils/format';
 
 const props = defineProps({
@@ -11,6 +11,10 @@ const props = defineProps({
     stats: {
         type: Object,
         default: () => ({}),
+    },
+    current_user_id: {
+        type: [String, Number],
+        default: null,
     },
 });
 
@@ -23,6 +27,16 @@ const roleStyles = {
     superadmin: 'bg-emerald-100 text-emerald-800',
     admin: 'bg-blue-100 text-blue-800',
 };
+
+function destroy(user) {
+    if (!confirm(`Hapus user ${user.name}?`)) {
+        return;
+    }
+
+    router.delete(route('users.destroy', user.id), {
+        preserveScroll: true,
+    });
+}
 </script>
 
 <template>
@@ -42,6 +56,9 @@ const roleStyles = {
                         </div>
 
                         <div class="flex flex-wrap gap-3">
+                            <Link :href="route('users.create')" class="rounded-full bg-blue-400 px-5 py-3 text-sm font-semibold text-slate-950">
+                                Tambah User
+                            </Link>
                             <Link :href="route('profile.edit')" class="rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10">
                                 Profil Saya
                             </Link>
@@ -85,12 +102,12 @@ const roleStyles = {
                                     v-for="user in users"
                                     :key="user.id"
                                     class="hover:bg-[#fff2d9]/60"
-                                    :class="user.is_current ? 'bg-emerald-50/60' : ''"
+                                    :class="user.id === current_user_id ? 'bg-emerald-50/60' : ''"
                                 >
                                     <td class="px-6 py-4">
                                         <div class="font-semibold text-slate-950">
                                             {{ user.name }}
-                                            <span v-if="user.is_current" class="ml-2 rounded-full bg-emerald-100 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-800">
+                                            <span v-if="user.id === current_user_id" class="ml-2 rounded-full bg-emerald-100 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-800">
                                                 Aktif
                                             </span>
                                         </div>
@@ -112,6 +129,22 @@ const roleStyles = {
                                     </td>
                                     <td class="px-6 py-4 text-sm text-slate-600">
                                         {{ formatDate(user.updated_at) }}
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex flex-wrap gap-2">
+                                            <Link :href="route('users.edit', user.id)" class="rounded-full border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700">
+                                                Edit
+                                            </Link>
+                                            <button
+                                                type="button"
+                                                @click="destroy(user)"
+                                                :disabled="user.id === current_user_id"
+                                                class="rounded-full px-3 py-2 text-xs font-semibold text-white"
+                                                :class="user.id === current_user_id ? 'cursor-not-allowed bg-slate-300' : 'bg-rose-600'"
+                                            >
+                                                Hapus
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             </tbody>
