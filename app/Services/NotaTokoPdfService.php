@@ -217,7 +217,7 @@ pix = page.get_pixmap(matrix=fitz.Matrix(2, 2), alpha=False)
 pix.save(png_path)
 PY;
 
-        foreach (['python', 'py'] as $binary) {
+        foreach (['python3', 'python', 'py'] as $binary) {
             $process = new Process([$binary, '-c', $script, $absolutePath, $pngPath]);
             $process->setTimeout(30);
             $process->run();
