@@ -8,6 +8,7 @@ import { Link, usePage } from '@inertiajs/vue3';
 
 const showingNavigationDropdown = ref(false);
 const page = usePage();
+const isSuperAdmin = computed(() => page.props.auth.user?.role === 'superadmin');
 
 const userInitials = computed(() => {
     const name = String(page.props.auth.user?.name ?? '').trim();
@@ -37,12 +38,19 @@ const documentMenuItems = [
     { label: 'Nota Toko', name: 'nota-toko.index' },
 ];
 
-const settingsMenuItems = [
-    { label: 'Mitra', name: 'mitra.index' },
-    { label: 'User', name: 'users.index' },
-    { label: 'Dokumen Template', name: 'document-templates.index' },
-    { label: 'Simulasi Pembiayaan', name: 'simulasi-pembiayaan.index' },
-];
+const settingsMenuItems = computed(() => {
+    const items = [
+        { label: 'Mitra', name: 'mitra.index' },
+        { label: 'Dokumen Template', name: 'document-templates.index' },
+        { label: 'Simulasi Pembiayaan', name: 'simulasi-pembiayaan.index' },
+    ];
+
+    if (isSuperAdmin.value) {
+        items.splice(1, 0, { label: 'User', name: 'users.index' });
+    }
+
+    return items;
+});
 
 const accountMenuItems = [
     { label: 'Profile', href: route('profile.edit') },
